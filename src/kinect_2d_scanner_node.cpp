@@ -14,7 +14,7 @@
 #include <sensor_msgs/LaserScan.h>
 #include <std_msgs/String.h>
 
-#include "kinect_2d_scanner/TKinect2DScannerConfig.h"
+#include "kinect_2d_scanner/KinectTo2DScansConfig.h"
 
 // Conversions ROS msgs <-> MRPT structs
 #include <mrpt_bridge/mrpt_bridge.h>
@@ -40,7 +40,7 @@ using namespace mrpt::slam;  // for mrpt::CObservation*
 // Thread for grabbing: Do this is another thread to exploit multicore CPUs.
 struct TThreadParam
 {
-	typedef kinect_2d_scanner::TKinect2DScannerConfig  TConfig;
+	typedef kinect_2d_scanner::KinectTo2DScansConfig  TConfig;
 
 	TThreadParam(TConfig  &_config) : quit(false), config(_config)  { }
 
@@ -112,12 +112,12 @@ struct TGUIData
 	mrpt::opengl::COpenGLViewportPtr  viewInt; //!< Extra viewports for the RGB images.
 
 
-	TGUIData(const kinect_2d_scanner::TKinect2DScannerConfig &_config)
+	TGUIData(const kinect_2d_scanner::KinectTo2DScansConfig &_config)
 	{
 		updateFromConfig(_config);
 	}
 
-	void updateFromConfig(const kinect_2d_scanner::TKinect2DScannerConfig &_config);
+	void updateFromConfig(const kinect_2d_scanner::KinectTo2DScansConfig &_config);
 
 private:
 	void start();
@@ -125,9 +125,9 @@ private:
 
 // All callbacks requird when dynamic reconfigure sends us something:
 void reconfigure_all(
-	kinect_2d_scanner::TKinect2DScannerConfig &new_config,
+	kinect_2d_scanner::KinectTo2DScansConfig &new_config,
 	uint32_t level,
-	kinect_2d_scanner::TKinect2DScannerConfig *config_placeholder,
+	kinect_2d_scanner::KinectTo2DScansConfig *config_placeholder,
 	TGUIData &gui_data
 	)
 {
@@ -203,7 +203,7 @@ int main(int argc, char **argv)
 
 	// Set of node parameters (for dynamic reconfigure):
 	// ---------------------------------------------------
-	kinect_2d_scanner::TKinect2DScannerConfig  config = kinect_2d_scanner::TKinect2DScannerConfig::__getDefault__();
+	kinect_2d_scanner::KinectTo2DScansConfig  config = kinect_2d_scanner::KinectTo2DScansConfig::__getDefault__();
 
 	// Aux data structs:
 	TGUIData     gui_data(config);
@@ -215,9 +215,9 @@ int main(int argc, char **argv)
 
 	// Attach reconfigure server:
 	// ---------------------------------------------------
-	dynamic_reconfigure::Server<kinect_2d_scanner::TKinect2DScannerConfig> reconfigure_server( ros::NodeHandle("~") );
+	dynamic_reconfigure::Server<kinect_2d_scanner::KinectTo2DScansConfig> reconfigure_server( ros::NodeHandle("~") );
 
-    dynamic_reconfigure::Server<kinect_2d_scanner::TKinect2DScannerConfig>::CallbackType f
+	dynamic_reconfigure::Server<kinect_2d_scanner::KinectTo2DScansConfig>::CallbackType f
 		= boost::bind(&reconfigure_all,_1,_2, &config,gui_data);
 
     reconfigure_server.setCallback(f);
@@ -378,7 +378,7 @@ void TGUIData::start()
 
 }
 
-void TGUIData::updateFromConfig(const kinect_2d_scanner::TKinect2DScannerConfig &config)
+void TGUIData::updateFromConfig(const kinect_2d_scanner::KinectTo2DScansConfig &config)
 {
 	// Start/stop:
 	if (config.show_GUI && !win3D) start();
