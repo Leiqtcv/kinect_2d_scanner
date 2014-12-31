@@ -35,7 +35,13 @@
 
 
 using namespace std;
-using namespace mrpt::slam;  // for mrpt::CObservation*
+using namespace mrpt::utils;
+using namespace mrpt::opengl;
+#if MRPT_VERSION >=0x130
+	using namespace mrpt::obs;  // for mrpt::CObservation*
+#else
+	using namespace mrpt::slam;  // for mrpt::CObservation*
+#endif
 
 // Thread for grabbing: Do this is another thread to exploit multicore CPUs.
 struct TThreadParam
@@ -242,7 +248,7 @@ int main(int argc, char **argv)
 			last_obs_imu = thrPar.new_obs_imu.get();
 
 			// Convert to equivalent 2D laser scan:
-			mrpt::slam::CObservation2DRangeScan scan2d;
+			CObservation2DRangeScan scan2d;
 
 			last_obs->convertTo2DScan(
 				scan2d,
